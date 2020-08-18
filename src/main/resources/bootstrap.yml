@@ -1,0 +1,19 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: @project.artifactId@
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+        namespace: 7a0bcf1f-e5b7-4f63-aefa-cb86df8c79eb
+        group: @project.version@
+        extension-configs:
+          - data-id: lion-common.${spring.cloud.nacos.config.file-extension}
+            refresh: true
+            group: GLOBAL_GROUP
+#          - data-id: lion-sentinel-common.${spring.cloud.nacos.config.file-extension}
+#            refresh: true
+#            group: GLOBAL_GROUP

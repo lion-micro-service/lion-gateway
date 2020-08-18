@@ -1,3 +1,45 @@
+/node_modules
+/dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.DS_Store
+{{#unit}}
+/test/unit/coverage/
+{{/unit}}
+{{#e2e}}
+/test/e2e/reports/
+selenium-debug.log
+{{/e2e}}
+
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.project
+.settings
+target
+.classpath
+*.log
+.DS_Store
+*.iml
+.factorypath
+
+.externalToolBuilders
+
 # Compiled class file
 *.class
 
