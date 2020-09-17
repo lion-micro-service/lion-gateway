@@ -1,7 +1,7 @@
 package com.lion.gateway.exception;
 
 import com.lion.core.ResultData;
-import com.lion.core.ResultDataState;
+import com.lion.core.common.enums.ResultDataState;
 import com.lion.utils.BeanToMapUtil;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;

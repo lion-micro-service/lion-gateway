@@ -1,7 +1,7 @@
 package com.lion.gateway.exception.handle;
 
 import com.lion.core.ResultData;
-import com.lion.core.ResultDataState;
+import com.lion.core.common.enums.ResultDataState;
 import com.lion.utils.JsonUtil;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Primary;
