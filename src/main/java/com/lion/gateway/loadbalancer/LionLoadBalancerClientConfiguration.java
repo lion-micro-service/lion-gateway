@@ -2,7 +2,6 @@ package com.lion.gateway.loadbalancer;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.cloud.client.ConditionalOnDiscoveryEnabled;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClientConfiguration;
 import org.springframework.cloud.loadbalancer.core.ReactorLoadBalancer;
@@ -11,7 +10,6 @@ import org.springframework.cloud.loadbalancer.core.ServiceInstanceListSupplier;
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
 import java.util.Objects;
@@ -22,9 +20,7 @@ import java.util.Objects;
  * @create: 2020-07-10 16:46
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnDiscoveryEnabled
-//@AutoConfigureAfter(LoadBalancerClientConfiguration.class)
-public class DevelopmentLoadBalancerClientConfiguration extends LoadBalancerClientConfiguration {
+public class LionLoadBalancerClientConfiguration extends LoadBalancerClientConfiguration {
 
     @Value("${spring.cloud.gateway.development.mode.enabled:false}")
     private Boolean mode;
@@ -32,15 +28,13 @@ public class DevelopmentLoadBalancerClientConfiguration extends LoadBalancerClie
     @Override
     @Bean
     @ConditionalOnMissingBean
-//    @Primary
     public ReactorLoadBalancer<ServiceInstance> reactorServiceInstanceLoadBalancer(
             Environment environment,
             LoadBalancerClientFactory loadBalancerClientFactory) {
         String name = environment.getProperty(LoadBalancerClientFactory.PROPERTY_NAME);
 
         return Objects.equals(mode,true) ?
-                new DevelopmentLoadBalancer(loadBalancerClientFactory.getLazyProvider(name,
-                ServiceInstanceListSupplier.class), name) :
+                new LionLoadBalancer(loadBalancerClientFactory.getLazyProvider(name,ServiceInstanceListSupplier.class), name) :
                 new RoundRobinLoadBalancer(loadBalancerClientFactory.getLazyProvider(name, ServiceInstanceListSupplier.class), name);
     }
 }
