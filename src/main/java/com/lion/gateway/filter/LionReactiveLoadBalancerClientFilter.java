@@ -67,7 +67,6 @@ public class LionReactiveLoadBalancerClientFilter implements GlobalFilter, Order
             log.trace(ReactiveLoadBalancerClientFilter.class.getSimpleName()
                     + " url before: " + url);
         }
-
         return choose(exchange).doOnNext(response -> {
 
             if (!response.hasServer()) {
