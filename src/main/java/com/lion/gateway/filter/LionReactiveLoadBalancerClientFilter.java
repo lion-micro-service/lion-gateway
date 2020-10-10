@@ -1,5 +1,6 @@
-package com.lion.gateway.loadbalancer;
+package com.lion.gateway.filter;
 
+import com.lion.gateway.loadbalancer.LionLoadBalancer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.cloud.client.ServiceInstance;

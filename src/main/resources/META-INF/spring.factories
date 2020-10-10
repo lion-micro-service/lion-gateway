@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.lion.gateway.filter.LionGatewayReactiveLoadBalancerClientAutoConfiguration,\
+com.lion.gateway.loadbalancer.LionLoadBalancerClientConfiguration

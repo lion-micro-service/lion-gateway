@@ -1,5 +1,6 @@
 package com.lion.gateway.loadbalancer;
 
+import com.lion.exception.BusinessException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -10,11 +11,13 @@ import org.springframework.cloud.client.loadbalancer.reactive.Request;
 import org.springframework.cloud.client.loadbalancer.reactive.Response;
 import org.springframework.cloud.loadbalancer.core.*;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @description: 自定义LoadBalancer，为解决开发过程中服务乱窜的问题
@@ -33,6 +36,8 @@ public class LionLoadBalancer implements ReactorServiceInstanceLoadBalancer{
     private ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider;
 
     private final String serviceId;
+
+    private AtomicReference<String> _ip = new AtomicReference<String>();
 
     public LionLoadBalancer(String serviceId,
                                   ObjectProvider<ServiceInstanceSupplier> serviceInstanceSupplier) {
@@ -75,25 +80,37 @@ public class LionLoadBalancer implements ReactorServiceInstanceLoadBalancer{
 
     private Response<ServiceInstance> getInstanceResponse(
             List<ServiceInstance> instances) {
+        String ip = _ip.get();
         if (instances.isEmpty()) {
             log.warn("No servers available for service: " + this.serviceId);
+            _ip.set(null);
             return new EmptyResponse();
         }
-        // TODO: enforce order?
+        if (StringUtils.hasText(ip)){
+            for (ServiceInstance serviceInstance : instances){
+                if (serviceInstance.getHost().equals(ip)){
+                    _ip.set(null);
+                    return new DefaultResponse(serviceInstance);
+                }
+            }
+        }
         int pos = Math.abs(this.position.incrementAndGet());
-
         ServiceInstance instance = instances.get(pos % instances.size());
-
+        _ip.set(null);
         return new DefaultResponse(instance);
     }
 
     public Mono<Response<ServiceInstance>> choose(Request request,String ip) {
+        if (StringUtils.hasText(_ip.get())){
+            new BusinessException("开发环境触发高并发阻断（为避免该功能失效特设此异常来阻断）");
+        }
+        _ip.set(ip);
         if (serviceInstanceListSupplierProvider != null) {
             ServiceInstanceListSupplier supplier = serviceInstanceListSupplierProvider
                     .getIfAvailable(NoopServiceInstanceListSupplier::new);
+            //他妈的不能这么干
 //            supplier.get().toStream().forEach(list -> {
 //                list.forEach(serviceInstance -> {
-//                    System.out.println(serviceInstance.getHost());
 //                });
 //            });
             return supplier.get().next().map(this::getInstanceResponse);
