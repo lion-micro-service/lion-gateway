@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Objects;
 
 /**
- * @description:
+ * @description: 自定义LoadBalancer 用于解决开发环境服务乱传问题
  * @author: mr.liu
  * @create: 2020-10-09 19:39
  **/
