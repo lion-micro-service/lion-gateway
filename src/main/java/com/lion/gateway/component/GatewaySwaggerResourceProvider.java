@@ -22,7 +22,7 @@ import java.util.*;
 @Primary
 public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider {
 
-    private static final String OAS_30_URL = "/v3/api-docs";
+    private static final String OAS_30_URL = "/v2/api-docs";
     /**
      * 网关路由
      */
@@ -44,11 +44,9 @@ public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider 
         List<SwaggerResource> resources = new ArrayList<>();
         List<String> routeHosts = new ArrayList<>();
         Map<String,String> resourceName = new HashMap<String,String>();
-        // 获取所有可用的host：serviceId
         routeLocator.getRoutes()
                 .filter(route -> route.getUri().getHost() != null)
                 .filter(route -> Objects.equals(route.getUri().getScheme(), "lb"))
-//                .filter(route -> !self.equals(route.getUri().getHost()))
                 .subscribe(route -> {
                     routeHosts.add(route.getUri().getHost());
                     Map<String, Object> metadata = route.getMetadata();
@@ -57,10 +55,8 @@ public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider 
                     }
                 });
 
-        // 记录已经添加过的server，存在同一个应用注册了多个服务在nacos上
         Set<String> dealed = new HashSet<>();
         routeHosts.forEach(instance -> {
-            // 拼接url
             String url = "/" + instance.toLowerCase() + OAS_30_URL;
             if (!dealed.contains(url)) {
                 dealed.add(url);
@@ -71,7 +67,6 @@ public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider 
                 }else {
                     swaggerResource.setName(instance);
                 }
-                //swaggerResource.setSwaggerVersion("3.0.3");
                 resources.add(swaggerResource);
             }
         });
