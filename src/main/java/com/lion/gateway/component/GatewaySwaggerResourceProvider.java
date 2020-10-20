@@ -48,10 +48,12 @@ public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider 
                 .filter(route -> route.getUri().getHost() != null)
                 .filter(route -> Objects.equals(route.getUri().getScheme(), "lb"))
                 .subscribe(route -> {
-                    routeHosts.add(route.getUri().getHost());
                     Map<String, Object> metadata = route.getMetadata();
-                    if (metadata.containsKey("resource_name") && Objects.nonNull(metadata.get("resource_name"))){
-                        resourceName.put(route.getUri().getHost(),String.valueOf(metadata.get("resource_name")));
+                    if (metadata.containsKey("swagger_enable") && Objects.equals(metadata.get("swagger_enable"),"true")) {
+                        routeHosts.add(route.getUri().getHost());
+                        if (metadata.containsKey("resource_name") && Objects.nonNull(metadata.get("resource_name"))) {
+                            resourceName.put(route.getUri().getHost(), String.valueOf(metadata.get("resource_name")));
+                        }
                     }
                 });
 
