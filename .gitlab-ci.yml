@@ -1,0 +1,11 @@
+stages:
+  - build
+
+build:
+  stage: build
+  tags:
+    - ci-build
+  only:
+    - master
+  script:
+    - mvn clean install deploy
