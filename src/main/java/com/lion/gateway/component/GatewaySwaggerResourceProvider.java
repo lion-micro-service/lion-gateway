@@ -23,20 +23,12 @@ import java.util.*;
 public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider {
 
     private static final String OAS_30_URL = "/v3/api-docs";
-    /**
-     * 网关路由
-     */
+
     @Autowired
     private RouteLocator routeLocator;
 
     @Autowired
     private GatewayProperties gatewayProperties;
-
-    /**
-     * 网关应用名称
-     */
-    @Value("${spring.application.name}")
-    private String self;
 
     @Override
     public List<SwaggerResource> get() {
