@@ -17,7 +17,7 @@ import org.springframework.context.annotation.FilterType;
 
 @EnableDiscoveryClient
 @SpringBootApplication ()
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {GatewayReactiveLoadBalancerClientAutoConfiguration.class, EntityAuditorConfiguration.class, RestulException.class, LoadBalancerClientConfiguration.class}))
+@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {GatewayReactiveLoadBalancerClientAutoConfiguration.class, EntityAuditorConfiguration.class, LoadBalancerClientConfiguration.class}))
 @LoadBalancerClients(defaultConfiguration = {LionLoadBalancerClientConfiguration.class})
 public class ApplicationGateway {
 
