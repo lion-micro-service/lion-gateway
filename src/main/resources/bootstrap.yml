@@ -8,7 +8,8 @@ spring:
       config:
         server-addr: 172.16.30.100:8848
         file-extension: yaml
-        namespace: 7a0bcf1f-e5b7-4f63-aefa-cb86df8c79eb
+#        namespace: 7a0bcf1f-e5b7-4f63-aefa-cb86df8c79eb
+        namespace: 42d2ba4a-5e98-419f-a168-ec9263d9ebe2
         group: @project.version@
         extension-configs:
           - data-id: lion-common.${spring.cloud.nacos.config.file-extension}
