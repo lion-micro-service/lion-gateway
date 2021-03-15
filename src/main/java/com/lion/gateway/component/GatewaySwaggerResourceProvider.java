@@ -22,6 +22,7 @@ import java.util.*;
 @Primary
 public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider {
 
+    private static final String OAS_20_URL = "/v2/api-docs";
     private static final String OAS_30_URL = "/v3/api-docs";
 
     @Autowired
@@ -51,7 +52,7 @@ public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider 
 
         Set<String> dealed = new HashSet<>();
         routeHosts.forEach(instance -> {
-            String url = "/" + instance.toLowerCase() + OAS_30_URL;
+            String url = "/" + instance.toLowerCase() + OAS_20_URL;
             if (!dealed.contains(url)) {
                 dealed.add(url);
                 SwaggerResource swaggerResource = new SwaggerResource();
