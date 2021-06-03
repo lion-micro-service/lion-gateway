@@ -26,7 +26,7 @@ public class CorsConfiguration {
     public WebFilter corsFilter() {
         return (ServerWebExchange ctx, WebFilterChain chain) -> {
             ServerHttpRequest request = ctx.getRequest();
-//            if (CorsUtils.isCorsRequest(request)) {
+            if (CorsUtils.isCorsRequest(request)) {
                 ServerHttpResponse response = ctx.getResponse();
                 HttpHeaders headers = response.getHeaders();
                 headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST, GET, PUT, OPTIONS, DELETE, PATCH");
@@ -39,7 +39,7 @@ public class CorsConfiguration {
                     response.setStatusCode(HttpStatus.OK);
                     return Mono.empty();
                 }
-//            }
+            }
             return chain.filter(ctx);
         };
     }
