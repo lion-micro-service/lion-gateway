@@ -3,6 +3,7 @@ package com.lion.gateway.exception;
 import com.lion.core.ResultData;
 import com.lion.core.common.enums.ResultDataState;
 import com.lion.utils.BeanToMapUtil;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -21,7 +22,7 @@ import java.util.Map;
 @Deprecated //屏蔽此做法不能修改 response.setStatusCode(HttpStatus.OK);
 public class GlobalErrorAttributes extends DefaultErrorAttributes {
     @Override
-    public Map<String, Object> getErrorAttributes(ServerRequest request, boolean includeStackTrace) {
+    public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
         ServerHttpResponse response = request.exchange().getResponse();
         response.setStatusCode(HttpStatus.OK);
         ResultData resultData = new ResultData();
