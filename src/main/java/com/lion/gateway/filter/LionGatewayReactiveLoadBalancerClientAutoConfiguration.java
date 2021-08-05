@@ -1,13 +1,24 @@
 package com.lion.gateway.filter;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.*;
-import org.springframework.cloud.gateway.config.LoadBalancerProperties;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerProperties;
+import org.springframework.cloud.client.loadbalancer.reactive.ReactiveLoadBalancer;
+import org.springframework.cloud.gateway.config.GatewayLoadBalancerProperties;
+import org.springframework.cloud.gateway.config.GatewayReactiveLoadBalancerClientAutoConfiguration;
+import org.springframework.cloud.gateway.config.conditional.ConditionalOnEnabledGlobalFilter;
+import org.springframework.cloud.gateway.filter.LoadBalancerServiceInstanceCookieFilter;
 import org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter;
+import org.springframework.cloud.loadbalancer.config.LoadBalancerAutoConfiguration;
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.DispatcherHandler;
 
 import java.util.Objects;
 
@@ -23,29 +34,19 @@ public class LionGatewayReactiveLoadBalancerClientAutoConfiguration {
     private Boolean mode;
 
     @Bean
-    public GlobalFilter lionGatewayLoadBalancerClientFilter(
-            LoadBalancerClientFactory clientFactory, LoadBalancerProperties properties) {
+    public ReactiveLoadBalancerClientFilter gatewayLoadBalancerClientFilter(LoadBalancerClientFactory clientFactory,
+                                                                            GatewayLoadBalancerProperties properties, LoadBalancerProperties loadBalancerProperties) {
         return Objects.equals(mode,true) ?
-                new LionReactiveLoadBalancerClientFilter(clientFactory, properties) :
-                new ReactiveLoadBalancerClientFilter(clientFactory, properties);
+                new LionReactiveLoadBalancerClientFilter(clientFactory,properties, loadBalancerProperties) :
+                new ReactiveLoadBalancerClientFilter(clientFactory,properties, loadBalancerProperties);
     }
 
-    private static final class OnNoRibbonDefaultCondition extends AnyNestedCondition {
 
-        private OnNoRibbonDefaultCondition() {
-            super(ConfigurationPhase.REGISTER_BEAN);
-        }
-
-        @ConditionalOnProperty(value = "spring.cloud.loadbalancer.ribbon.enabled",
-                havingValue = "false")
-        static class RibbonNotEnabled {
-
-        }
-
-        @ConditionalOnMissingClass("org.springframework.cloud.netflix.ribbon.RibbonLoadBalancerClient")
-        static class RibbonLoadBalancerNotPresent {
-
-        }
-
+    @Bean
+    public LoadBalancerServiceInstanceCookieFilter loadBalancerServiceInstanceCookieFilter(
+            LoadBalancerProperties loadBalancerProperties) {
+        return new LoadBalancerServiceInstanceCookieFilter(loadBalancerProperties);
     }
+
+
 }

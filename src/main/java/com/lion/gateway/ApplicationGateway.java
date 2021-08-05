@@ -11,13 +11,13 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.gateway.config.GatewayReactiveLoadBalancerClientAutoConfiguration;
 import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClientConfiguration;
 import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClients;
+import org.springframework.cloud.loadbalancer.config.LoadBalancerAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
-
-@EnableDiscoveryClient
 @SpringBootApplication ()
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {GatewayReactiveLoadBalancerClientAutoConfiguration.class, EntityAuditorConfiguration.class, LoadBalancerClientConfiguration.class}))
+@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {GatewayReactiveLoadBalancerClientAutoConfiguration.class, EntityAuditorConfiguration.class,  LoadBalancerClientConfiguration.class}))
+@EnableDiscoveryClient
 @LoadBalancerClients(defaultConfiguration = {LionLoadBalancerClientConfiguration.class})
 public class ApplicationGateway {
 
