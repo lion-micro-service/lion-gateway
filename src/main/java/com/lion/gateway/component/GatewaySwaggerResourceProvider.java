@@ -52,7 +52,7 @@ public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider 
 
         Set<String> dealed = new HashSet<>();
         routeHosts.forEach(instance -> {
-            String url = "/" + instance.toLowerCase() + OAS_20_URL;
+            String url = "/" + instance.toLowerCase() + OAS_30_URL;
             if (!dealed.contains(url)) {
                 dealed.add(url);
                 SwaggerResource swaggerResource = new SwaggerResource();
