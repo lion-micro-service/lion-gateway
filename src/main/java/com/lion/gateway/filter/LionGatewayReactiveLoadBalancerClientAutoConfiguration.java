@@ -38,7 +38,7 @@ public class LionGatewayReactiveLoadBalancerClientAutoConfiguration {
                                                                             GatewayLoadBalancerProperties properties, LoadBalancerProperties loadBalancerProperties) {
         return Objects.equals(mode,true) ?
                 new LionReactiveLoadBalancerClientFilter(clientFactory,properties, loadBalancerProperties) :
-                new ReactiveLoadBalancerClientFilter(clientFactory,properties, loadBalancerProperties);
+                new ReactiveLoadBalancerClientFilter(clientFactory,properties,loadBalancerProperties);
     }
 
 
