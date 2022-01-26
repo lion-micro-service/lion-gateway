@@ -1,5 +1,6 @@
 package com.lion.gateway.loadbalancer;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.ObjectProvider;
