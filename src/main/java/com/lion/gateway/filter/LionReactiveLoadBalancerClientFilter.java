@@ -16,6 +16,7 @@ import org.springframework.cloud.loadbalancer.core.ReactorLoadBalancer;
 import org.springframework.cloud.loadbalancer.core.ReactorServiceInstanceLoadBalancer;
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
 import org.springframework.core.Ordered;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -79,8 +80,10 @@ public class LionReactiveLoadBalancerClientFilter extends ReactiveLoadBalancerCl
                         RequestDataContext.class, ResponseData.class, ServiceInstance.class);
         DefaultRequest<RequestDataContext> lbRequest = new DefaultRequest<>(new RequestDataContext(
                 new RequestData(exchange.getRequest()), getHint(serviceId, loadBalancerProperties.getHint())));
-//        String ip = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
         String ip = exchange.getRequest().getHeaders().getFirst("X-Real-IP");
+        if (!StringUtils.hasText(ip)) {
+            ip = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
+        }
         return choose(ip,lbRequest, serviceId, supportedLifecycleProcessors).doOnNext(response -> {
 
             if (!response.hasServer()) {

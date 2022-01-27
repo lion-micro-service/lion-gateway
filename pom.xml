@@ -130,7 +130,7 @@
 				</executions>
 				<configuration>
 					<username>admin</username>
-					<password>admin</password>
+					<password>smartlinks@123$%^</password>
 					<repository>${docker.repository}/lion/${project.artifactId}</repository>
 					<tag>${project.version}</tag>
 					<buildArgs>
