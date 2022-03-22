@@ -52,7 +52,7 @@ public class LionLoadBalancer  implements ReactorServiceInstanceLoadBalancer{
         for (ServiceInstance serviceInstance : serviceInstances){
             if (StringUtils.hasText(path) && path.indexOf("v3/api-docs") > -1) {
                 Map<String, String> metadata = serviceInstance.getMetadata();
-                if (metadata.containsKey("swagger_enable") && Objects.equals(metadata.get("swagger_enable"),"true")) {
+                if (metadata.containsKey("show_enable") && Objects.equals(metadata.get("show_enable"),"true")) {
                     return new DefaultResponse(serviceInstance);
                 }
             }else if (StringUtils.hasText(ip)){
