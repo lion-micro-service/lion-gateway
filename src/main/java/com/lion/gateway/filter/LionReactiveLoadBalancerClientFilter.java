@@ -138,7 +138,8 @@ public class LionReactiveLoadBalancerClientFilter extends ReactiveLoadBalancerCl
             throw new NotFoundException("No loadbalancer available for " + serviceId);
         }
         supportedLifecycleProcessors.forEach(lifecycle -> lifecycle.onStart(lbRequest));
-        return ((LionLoadBalancer)loadBalancer).choose(lbRequest,ip);
+        String path = lbRequest.getContext().getClientRequest().getUrl().getPath();
+        return ((LionLoadBalancer)loadBalancer).choose(lbRequest,ip,path);
     }
 
     private String getHint(String serviceId, Map<String, String> hints) {

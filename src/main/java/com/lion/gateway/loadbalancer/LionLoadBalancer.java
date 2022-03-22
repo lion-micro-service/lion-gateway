@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -40,16 +41,21 @@ public class LionLoadBalancer  implements ReactorServiceInstanceLoadBalancer{
         });
     }
 
-    public Mono<Response<ServiceInstance>> choose(Request request, String ip) {
+    public Mono<Response<ServiceInstance>> choose(Request request, String ip,String path) {
         ServiceInstanceListSupplier supplier = (ServiceInstanceListSupplier)this.serviceInstanceListSupplierProvider.getIfAvailable(NoopServiceInstanceListSupplier::new);
         return supplier.get(request).next().map((serviceInstances) -> {
-            return this.processInstanceResponse(supplier, serviceInstances, ip);
+            return this.processInstanceResponse(supplier, serviceInstances, ip, path);
         });
     }
 
-    private Response<ServiceInstance> processInstanceResponse(ServiceInstanceListSupplier supplier, List<ServiceInstance> serviceInstances, String ip) {
+    private Response<ServiceInstance> processInstanceResponse(ServiceInstanceListSupplier supplier, List<ServiceInstance> serviceInstances, String ip, String path) {
         for (ServiceInstance serviceInstance : serviceInstances){
-            if (StringUtils.hasText(ip)){
+            if (StringUtils.hasText(path) && path.indexOf("v3/api-docs") > -1) {
+                Map<String, String> metadata = serviceInstance.getMetadata();
+                if (metadata.containsKey("swagger_enable") && Objects.equals(metadata.get("swagger_enable"),"true")) {
+                    return new DefaultResponse(serviceInstance);
+                }
+            }else if (StringUtils.hasText(ip)){
                 if (Objects.equals(serviceInstance.getHost(),ip) ){
                     return new DefaultResponse(serviceInstance);
                 }
