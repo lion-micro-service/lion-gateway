@@ -55,12 +55,21 @@ public class LionLoadBalancer  implements ReactorServiceInstanceLoadBalancer{
                 if (metadata.containsKey("show_enable") && Objects.equals(metadata.get("show_enable"),"true")) {
                     return new DefaultResponse(serviceInstance);
                 }
-            }else if (StringUtils.hasText(ip)){
+            }
+            if (StringUtils.hasText(ip)){
                 if (Objects.equals(serviceInstance.getHost(),ip) ){
                     return new DefaultResponse(serviceInstance);
                 }
             }
         }
+
+        for (ServiceInstance serviceInstance : serviceInstances){
+            Map<String, String> metadata = serviceInstance.getMetadata();
+            if (metadata.containsKey("development") && Objects.equals(metadata.get("development"),"true")) {
+                return new DefaultResponse(serviceInstance);
+            }
+        }
+        
         Response<ServiceInstance> serviceInstanceResponse = this.getInstanceResponse(serviceInstances);
         if (supplier instanceof SelectedInstanceCallback && serviceInstanceResponse.hasServer()) {
             ((SelectedInstanceCallback)supplier).selectedServiceInstance((ServiceInstance)serviceInstanceResponse.getServer());
