@@ -52,8 +52,11 @@ public class LionLoadBalancer  implements ReactorServiceInstanceLoadBalancer{
         for (ServiceInstance serviceInstance : serviceInstances){
             if (StringUtils.hasText(path) && path.indexOf("v3/api-docs") > -1) {
                 Map<String, String> metadata = serviceInstance.getMetadata();
-                if (metadata.containsKey("show_enable") && Objects.equals(metadata.get("show_enable"),"true")) {
-                    return new DefaultResponse(serviceInstance);
+                if (metadata.containsKey("show_swagger_ip")) {
+                    String showSwaggerIp = metadata.get("show_swagger_ip");
+                    if (Objects.equals(serviceInstance.getHost(),showSwaggerIp)) {
+                        return new DefaultResponse(serviceInstance);
+                    }
                 }
             }
             if (StringUtils.hasText(ip)){
@@ -65,8 +68,11 @@ public class LionLoadBalancer  implements ReactorServiceInstanceLoadBalancer{
 
         for (ServiceInstance serviceInstance : serviceInstances){
             Map<String, String> metadata = serviceInstance.getMetadata();
-            if (metadata.containsKey("development") && Objects.equals(metadata.get("development"),"true")) {
-                return new DefaultResponse(serviceInstance);
+            if (metadata.containsKey("development_ip")) {
+                String developmentIp = metadata.get("development_ip");
+                if (Objects.equals(serviceInstance.getHost(),developmentIp)) {
+                    return new DefaultResponse(serviceInstance);
+                }
             }
         }
         
