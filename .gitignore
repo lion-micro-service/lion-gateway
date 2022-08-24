@@ -4,7 +4,7 @@ package-lock.json
 # local env files
 .env.local
 .env.*.local
-
+*.versionsBackup
 # Log files
 npm-debug.log*
 yarn-debug.log*

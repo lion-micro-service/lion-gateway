@@ -4,7 +4,7 @@ spring:
   nacos:
 #    host: 172.16.30.100:8848
 #    namespace: 10d8c97e-d556-413f-bbf8-72d1e5b538b0
-    group: @project.version@
+    group: DEFAULT_GROUP
 #    host: 172.16.30.130:8848
 #    namespace: 7d03f927-32d1-4fa3-810d-9a5311ec5bf1
     host: 192.168.8.163:8848
