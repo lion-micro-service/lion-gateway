@@ -80,7 +80,10 @@ public class LionReactiveLoadBalancerClientFilter extends ReactiveLoadBalancerCl
                         RequestDataContext.class, ResponseData.class, ServiceInstance.class);
         DefaultRequest<RequestDataContext> lbRequest = new DefaultRequest<>(new RequestDataContext(
                 new RequestData(exchange.getRequest()), getHint(serviceId, loadBalancerProperties.getHint())));
-        String ip = exchange.getRequest().getHeaders().getFirst("X-Real-IP");
+        String ip = exchange.getRequest().getHeaders().getFirst("request_host");
+        if (!StringUtils.hasText(ip)) {
+            ip = exchange.getRequest().getHeaders().getFirst("X-Real-IP");
+        }
         if (!StringUtils.hasText(ip)) {
             ip = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
         }
