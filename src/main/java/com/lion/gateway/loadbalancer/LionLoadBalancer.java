@@ -28,6 +28,8 @@ public class LionLoadBalancer  implements ReactorServiceInstanceLoadBalancer{
     private static final Log log = LogFactory.getLog(RandomLoadBalancer.class);
     private final String serviceId;
     private ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider;
+    private final String IS_SHOW_SWAGGER = "isShowSwagger";
+    private final String IS_DEVELOPMENT_NODE = "isDevelopmentNode";
 
     public LionLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider, String serviceId) {
         this.serviceId = serviceId;
@@ -50,11 +52,11 @@ public class LionLoadBalancer  implements ReactorServiceInstanceLoadBalancer{
 
     private Response<ServiceInstance> processInstanceResponse(ServiceInstanceListSupplier supplier, List<ServiceInstance> serviceInstances, String ip, String path) {
         for (ServiceInstance serviceInstance : serviceInstances){
+            Map<String, String> metadata = serviceInstance.getMetadata();
             if (StringUtils.hasText(path) && path.indexOf("v3/api-docs") > -1) {
-                Map<String, String> metadata = serviceInstance.getMetadata();
-                if (metadata.containsKey("show_swagger_ip")) {
-                    String showSwaggerIp = metadata.get("show_swagger_ip");
-                    if (Objects.equals(serviceInstance.getHost(),showSwaggerIp)) {
+                if (metadata.containsKey(IS_SHOW_SWAGGER)) {
+                    Boolean is_show_swagger = Boolean.valueOf(metadata.get(IS_SHOW_SWAGGER));
+                    if (Objects.equals(is_show_swagger,true)) {
                         return new DefaultResponse(serviceInstance);
                     }
                 }
@@ -65,12 +67,11 @@ public class LionLoadBalancer  implements ReactorServiceInstanceLoadBalancer{
                 }
             }
         }
-
-        for (ServiceInstance serviceInstance : serviceInstances){
+        for (ServiceInstance serviceInstance : serviceInstances) {
             Map<String, String> metadata = serviceInstance.getMetadata();
-            if (metadata.containsKey("development_ip")) {
-                String developmentIp = metadata.get("development_ip");
-                if (Objects.equals(serviceInstance.getHost(),developmentIp)) {
+            if (metadata.containsKey(IS_DEVELOPMENT_NODE)) {
+                Boolean is_development_node = Boolean.valueOf(metadata.get(IS_DEVELOPMENT_NODE));
+                if (Objects.equals(is_development_node, true)) {
                     return new DefaultResponse(serviceInstance);
                 }
             }

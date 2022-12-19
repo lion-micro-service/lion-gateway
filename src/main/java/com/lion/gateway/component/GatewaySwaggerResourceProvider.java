@@ -22,8 +22,11 @@ import java.util.*;
 @Primary
 public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider {
 
-    private static final String OAS_20_URL = "/v2/api-docs";
-    private static final String OAS_30_URL = "/v3/api-docs";
+    private final String OAS_20_URL = "/v2/api-docs";
+    private final String OAS_30_URL = "/v3/api-docs";
+
+    private final String SWAGGER_ENABLE = "swagger_enable";
+    private final String RESOURCE_NAME = "resource_name";
 
     @Autowired
     private RouteLocator routeLocator;
@@ -42,10 +45,10 @@ public class GatewaySwaggerResourceProvider implements SwaggerResourcesProvider 
                 .filter(route -> Objects.equals(route.getUri().getScheme(), "lb"))
                 .subscribe(route -> {
                     Map<String, Object> metadata = route.getMetadata();
-                    if (metadata.containsKey("swagger_enable") && Objects.equals(metadata.get("swagger_enable"),"true")) {
+                    if (metadata.containsKey(SWAGGER_ENABLE) && Objects.equals(metadata.get(SWAGGER_ENABLE),"true")) {
                         routeHosts.add(route.getUri().getHost());
-                        if (metadata.containsKey("resource_name") && Objects.nonNull(metadata.get("resource_name"))) {
-                            resourceName.put(route.getUri().getHost(), String.valueOf(metadata.get("resource_name")));
+                        if (metadata.containsKey(RESOURCE_NAME) && Objects.nonNull(metadata.get(RESOURCE_NAME))) {
+                            resourceName.put(route.getUri().getHost(), String.valueOf(metadata.get(RESOURCE_NAME)));
                         }
                     }
                 });

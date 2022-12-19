@@ -7,8 +7,8 @@ spring:
     group: SMART_LINKS_GROUP
 #    host: 172.16.30.130:8848
 #    namespace: 7d03f927-32d1-4fa3-810d-9a5311ec5bf1
-    host: 192.168.8.163:8848
-    namespace: 60ef7489-a3f2-4fe9-8d3d-6083dbfcef6e
+    host: 192.168.8.213:31500
+    namespace: b4c39cdd-41ec-40b0-b263-108936d562b8
   application:
     name: @project.artifactId@
   cloud:
