@@ -11,7 +11,6 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter;
 import org.springframework.cloud.gateway.support.DelegatingServiceInstance;
 import org.springframework.cloud.gateway.support.NotFoundException;
-import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.cloud.loadbalancer.core.ReactorLoadBalancer;
 import org.springframework.cloud.loadbalancer.core.ReactorServiceInstanceLoadBalancer;
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
@@ -25,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.*;
-import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_LOADBALANCER_RESPONSE_ATTR;
 
 /**
  * @description: 自定义ReactiveLoadBalancerClientFilter 为解决开发过程中服务乱窜的问题 替换原有的LoadBalancerClientFilter（ReactiveLoadBalancerClientFilter）
@@ -80,7 +78,10 @@ public class LionReactiveLoadBalancerClientFilter extends ReactiveLoadBalancerCl
                         RequestDataContext.class, ResponseData.class, ServiceInstance.class);
         DefaultRequest<RequestDataContext> lbRequest = new DefaultRequest<>(new RequestDataContext(
                 new RequestData(exchange.getRequest()), getHint(serviceId, loadBalancerProperties.getHint())));
-        String ip = exchange.getRequest().getHeaders().getFirst("X-Real-IP");
+        String ip = exchange.getRequest().getHeaders().getFirst("requestHost");
+        if (!StringUtils.hasText(ip)) {
+            ip = exchange.getRequest().getHeaders().getFirst("X-Real-IP");
+        }
         if (!StringUtils.hasText(ip)) {
             ip = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
         }
