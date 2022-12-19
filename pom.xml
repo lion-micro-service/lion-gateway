@@ -100,10 +100,10 @@
 			<groupId>com.github.xiaoymin</groupId>
 			<artifactId>knife4j-spring-boot-starter</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.taobao.arthas</groupId>
-			<artifactId>arthas-spring-boot-starter</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.taobao.arthas</groupId>-->
+<!--			<artifactId>arthas-spring-boot-starter</artifactId>-->
+<!--		</dependency>-->
 	</dependencies>
 
 	<build>
@@ -112,7 +112,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<fork>true</fork>
 				</configuration>
 			</plugin>
 
