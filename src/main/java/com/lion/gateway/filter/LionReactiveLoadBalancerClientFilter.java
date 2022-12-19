@@ -22,7 +22,10 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.*;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_LOADBALANCER_RESPONSE_ATTR;
@@ -80,7 +83,10 @@ public class LionReactiveLoadBalancerClientFilter extends ReactiveLoadBalancerCl
                         RequestDataContext.class, ResponseData.class, ServiceInstance.class);
         DefaultRequest<RequestDataContext> lbRequest = new DefaultRequest<>(new RequestDataContext(
                 new RequestData(exchange.getRequest()), getHint(serviceId, loadBalancerProperties.getHint())));
-        String ip = exchange.getRequest().getHeaders().getFirst("X-Real-IP");
+        String ip = exchange.getRequest().getHeaders().getFirst("requestHost");
+        if (!StringUtils.hasText(ip)) {
+            ip = exchange.getRequest().getHeaders().getFirst("X-Real-IP");
+        }
         if (!StringUtils.hasText(ip)) {
             ip = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
         }
