@@ -60,6 +60,7 @@ public class LionLoadBalancer  implements ReactorServiceInstanceLoadBalancer{
                         return new DefaultResponse(serviceInstance);
                     }
                 }
+                continue;
             }
             if (StringUtils.hasText(ip)){
                 if (Objects.equals(serviceInstance.getHost(),ip) ){
